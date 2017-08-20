@@ -16,18 +16,14 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('new user connected');
 
-  socket.emit('newMessage', {
-    from: 'mike@example.com',
-    text: 'Hey. WHats up?',
-    createdAt: new Date()
-  });
 
-  // socket.on('createEmail', (newEmail) => {
-  //   console.log('createEmail', newEmail);
-  // });
-
-  socket.on('createMessage', (newMessage) => {
-    console.log('createMessage', newMessage);
+  socket.on('createMessage', (message) => {
+    console.log('createMessage', message);
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', () => {
@@ -35,10 +31,8 @@ io.on('connection', (socket) => {
   });
 });
 
-
-
 server.listen(port, () => {
   console.log(`Started on port ${port}`);
 });
 
-module.exports = {app};
+// module.exports = {app};
